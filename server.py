@@ -9,17 +9,18 @@ from moonlapseshared import crypto
 
 
 PORT = 42523
+TICKRATE = 0.5
 
 
 class Server:
     def __init__(self):
         self.selector = DefaultSelector()
         self.protocols = {}     # map of socket FD : Protocol
-        self.socket = None
+        self.socket = None      # accept listener
         self.pipe_r, self.pipe_w = os.pipe()    # pipe used for timer
         self.pubkey, self.privkey = crypto.load_rsa_keypair(os.path.dirname(os.path.realpath(sys.argv[0])))
         self.timer = threading.Thread(target=self._timer_loop, daemon=True)
-        self.tickrate = 0.5      # 20 ticks per second
+        self.tickrate = TICKRATE      # 20 ticks per second
 
     def start(self):
         try:
@@ -29,9 +30,7 @@ class Server:
             self.socket.listen(1)
             print(f"Moonlapse Server listening on {PORT}")
 
-            # set up tick timer
             self.timer.start()
-
             self._main_loop()
         except Exception as e:
             print(f"Error setting up the server. {e}")
@@ -62,7 +61,6 @@ class Server:
 
     def _tick(self, _):
         os.read(self.pipe_r, 1)
-        print("Tick!")
 
     def _timer_loop(self):
         while True:
