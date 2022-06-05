@@ -21,7 +21,7 @@ A `ProtoState` listens for specific packets and handles them differently.
 
 To initialise the database and run the server locally, you need to create a file in the base directory called `connectionstrings.json`.
 
-In there, you can either create a debug local db which uses sqlite3 as the backend and a db file called `moonlapse.db` in the base directory.
+In there, you can either create a debug local db which uses sqlite3 as the backend and a db file called `moonlapse.db` in the base directory, or you can use an existing database as a production environment.
 
 A debug `connectionstrings.json` looks like:
 ```json
@@ -30,7 +30,7 @@ A debug `connectionstrings.json` looks like:
 }
 ```
 
-while a production `connectionstrings.json` looks like:
+while a production `connectionstrings.json` might look like:
 ```json
 {
    "user": "MoonlapseAdmin",
