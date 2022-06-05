@@ -9,8 +9,13 @@ class Protocol:
         self.socket: socket.socket = sock
         self.state = EntryState(self)
         self.outgoing = deque()
+        self.incoming = deque()
 
     def tick(self):
+        # process all packets in incoming queue
+        for p in list(self.incoming):
+            self.state.dispatch_packet(p)
+            self.incoming.popleft()
 
         # send all packets in queue back to client in order
         for p in list(self.outgoing):
@@ -37,8 +42,8 @@ class Protocol:
             header = Header.from_bytes(bs)
             data = self.socket.recv(header.length)
             p = from_bytes(bs + data, self.server.privkey)
-            print(f"{self} received {p}")
-            self.state.dispatch_packet(p)
+            print(f"{self} received {p}. Adding to incoming queue.")
+            self.incoming.append(p)
         except Exception as e:
             print(f"{self} received some bytes, but they were not well formed.")
             print(e)
