@@ -3,7 +3,7 @@ import os
 import sys
 import threading
 import time
-from protocol import *
+from .protocol import *
 import socket
 from moonlapseshared import crypto
 

@@ -10,6 +10,12 @@
 
 *.pub
 *.pem
+connectionstrings.json
+
+server/migrations/*
+!server/migrations/__init__.py
+
+moonlapse.db
 
 # User-specific stuff
 .idea/**/workspace.xml

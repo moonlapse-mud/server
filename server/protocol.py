@@ -1,6 +1,5 @@
 import socket
-from moonlapseshared.packet import *
-from protostate import *
+from .protostate import *
 
 
 class Protocol:
