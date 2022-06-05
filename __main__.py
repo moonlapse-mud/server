@@ -1,3 +1,4 @@
+import manage
 from server.server import Server
 
 

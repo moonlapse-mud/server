@@ -1,5 +1,6 @@
 import socket
 from .protostate import *
+from collections import deque
 
 
 class Protocol:
@@ -7,6 +8,14 @@ class Protocol:
         self.server = server
         self.socket: socket.socket = sock
         self.state = EntryState(self)
+        self.outgoing = deque()
+
+    def tick(self):
+
+        # send all packets in queue back to client in order
+        for p in list(self.outgoing):
+            self.send_packet(p)
+            self.outgoing.popleft()
 
     def disconnect(self, reason="graceful"):
         print(f"{self} disconnected. Reason: {reason}")

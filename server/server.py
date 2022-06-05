@@ -6,6 +6,7 @@ import time
 from .protocol import *
 import socket
 from moonlapseshared import crypto
+from typing import Dict
 
 
 PORT = 42523
@@ -15,7 +16,7 @@ TICKRATE = 0.5
 class Server:
     def __init__(self):
         self.selector = DefaultSelector()
-        self.protocols = {}     # map of socket FD : Protocol
+        self.protocols: Dict[int, Protocol] = {}     # map of socket FD : Protocol
         self.socket = None      # accept listener
         self.pipe_r, self.pipe_w = os.pipe()    # pipe used for timer
         self.pubkey, self.privkey = crypto.load_rsa_keypair(os.path.dirname(os.path.realpath(sys.argv[0])))
@@ -61,6 +62,8 @@ class Server:
 
     def _tick(self, _):
         os.read(self.pipe_r, 1)
+        for proto in self.protocols.values():
+            proto.tick()
 
     def _timer_loop(self):
         while True:
